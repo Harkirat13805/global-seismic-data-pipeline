@@ -52,6 +52,7 @@
 - Serverless-compatible architecture
 - Control tables for state management
 - BI-ready analytics layer
+<img width="1727" height="1003" alt="image" src="https://github.com/user-attachments/assets/5302c34b-7443-416e-937d-76f3a0d68d6a" />
 
 ---
 
@@ -64,4 +65,9 @@
 ---
 
 ## 📁 Repository Structure
+
+
+
+<img width="1714" height="1017" alt="image" src="https://github.com/user-attachments/assets/1e2679bb-eb3d-473c-adf8-40fda6bdd419" />
+
 
