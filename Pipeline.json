@@ -1,0 +1,159 @@
+{
+  "name": "seismic_incremental_pipeline",
+  "email_notifications": {
+    "on_failure": [
+      "kiratsingh13805@gmail.com"
+    ],
+    "no_alert_for_skipped_runs": false
+  },
+  "webhook_notifications": {},
+  "notification_settings": {
+    "no_alert_for_skipped_runs": false,
+    "no_alert_for_canceled_runs": false
+  },
+  "timeout_seconds": 0,
+  "trigger": {
+    "pause_status": "UNPAUSED",
+    "periodic": {
+      "interval": 1,
+      "unit": "DAYS"
+    }
+  },
+  "max_concurrent_runs": 1,
+  "tasks": [
+    {
+      "task_key": "ingestion",
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Workspace/Sesmic_activity_EarthQuake/02_ingestion",
+        "source": "WORKSPACE"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {}
+    },
+    {
+      "task_key": "bronze_processing",
+      "depends_on": [
+        {
+          "task_key": "ingestion"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Workspace/Sesmic_activity_EarthQuake/03_bronze_processing",
+        "source": "WORKSPACE"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {}
+    },
+    {
+      "task_key": "silver_transformation",
+      "depends_on": [
+        {
+          "task_key": "bronze_processing"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Workspace/Sesmic_activity_EarthQuake/04_silver_transformation",
+        "source": "WORKSPACE"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {}
+    },
+    {
+      "task_key": "gold_aggregation",
+      "depends_on": [
+        {
+          "task_key": "silver_transformation"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Workspace/Sesmic_activity_EarthQuake/05_gold_aggregation",
+        "source": "WORKSPACE"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {}
+    },
+    {
+      "task_key": "optimization",
+      "depends_on": [
+        {
+          "task_key": "gold_aggregation"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Workspace/Sesmic_activity_EarthQuake/TABLE OPTIMIZATION",
+        "source": "WORKSPACE"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {}
+    },
+    {
+      "task_key": "physics_calculations",
+      "depends_on": [
+        {
+          "task_key": "optimization"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Workspace/Sesmic_activity_EarthQuake/calculations",
+        "source": "WORKSPACE"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {}
+    },
+    {
+      "task_key": "dashboard",
+      "depends_on": [
+        {
+          "task_key": "physics_calculations"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Workspace/Sesmic_activity_EarthQuake/06_display_reporting",
+        "source": "WORKSPACE"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {}
+    },
+    {
+      "task_key": "Global_Earthquake_Risk_Dashboard",
+      "depends_on": [
+        {
+          "task_key": "dashboard"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "dashboard_task": {
+        "subscription": {
+          "subscribers": [
+            {
+              "user_name": "kiratsingh13805@gmail.com"
+            }
+          ]
+        },
+        "warehouse_id": "6bc56ec31c2af0d7",
+        "dashboard_id": "01f0da5b46241df0b5199524133ee4ec"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {}
+    }
+  ],
+  "queue": {
+    "enabled": true
+  },
+  "performance_target": "PERFORMANCE_OPTIMIZED"
+}
